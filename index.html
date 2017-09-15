@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <title>Please Fix</title>
+    <!-- DEBUGGING. JSConsole dubugging outlet for mobiles -->
+    <!-- :listen 37d7b049-d39f-4956-9c07-975f9ffb2a2a -->
+    <!--
+    <script src="https://jsconsole.com/js/remote.js?37d7b049-d39f-4956-9c07-975f9ffb2a2a"></script>
+    -->
+
+    <!-- Initialize Javascript, CSS -->
+    <link rel="icon" href="tools.png" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="styling.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFFQ74Dt_2qcWgKKMkFmpRrWzlld0jnnw"></script>
+    <script src="https://t4t5.github.io/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://t4t5.github.io/sweetalert/dist/sweetalert.css">
+    <script>
+      /* global firebase */
+      var config = {
+        apiKey: "AIzaSyBknuMNxaSpcs1KbKskzongkI_uclp8BZk",
+        authDomain: "problem-reporter.firebaseapp.com",
+        databaseURL: "https://problem-reporter.firebaseio.com",
+        storageBucket: "problem-reporter.appspot.com",
+        messagingSenderId: "933143605953"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script src="index.js"></script>
+
+  </head>
+
+  <body id="body" tabindex="-1">
+
+    <!-- Side Menu for Extra Buttons -->
+    <div id="menu" class="menu"> <a href="javascript:void(0)" class="closebutton" onclick="CloseMenu()">&times;</a>
+      <br>
+      <span id="loginData">You are not signed in</span>
+      <br><br>
+      <button id="signoutbutton" class="menubutton button" onclick="SignOut()">Sign Out</button>
+      <button id="signoutipbutton" class="menubutton button" onclick="SignOutWithIP()">Sign Out</button>
+      <a style="text-decoration:none;" href="heatmap.html"><button id="heatmapbutton" style="display:block;" class="menubutton button">Heatmap</button></a>
+      <button id="instructionbutton" style="display:block" class="menubutton button" onclick="ChangePage('instruction')">Instructions</button>
+      <button id="aboutbutton" style="display:block" class="menubutton button" onclick="ChangePage('about')">About Us</button>
+      <button id="copybutton" style="display:block" class="menubutton button" onclick="ChangePage('copy')">Copyright Details</button>
+
+
+
+    </div>
+
+    <div id="content">
+
+      <!-- Instruction display for first time users -->
+      <div id="firsttimediv">
+        <div class="firstdisplay" id="first1" onclick="DisplayInstructionSlide()" style="background: green;">
+          <div class="firstcontent" id="fcontent1">
+            <h2>1</h2><b>Pin down the problem's location on the map, by moving the map, and clicking "Pin Location".<br>Click "Reset Location" to move the map back to you.</b>
+          </div>
+        </div>
+        <div class="firstdisplay firsthidden" id="first2" style="background: purple;">
+          <div class="firstcontent">
+            <h2>2</h2><b>Once you have your location, you just add a brief description of the problem.<br> If you have the app you can take a picture too!</b>
+          </div>
+        </div>
+        <div class="firstdisplay firsthidden" id="first3" style="background: red;">
+          <div class="firstcontent">
+            <h2>3</h2><b>Push the correct button to call or email the council.</b>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Screen for instructions -->
+      <div id="instructiondiv">
+        <h3>Instructions</h3>
+        <div id="instrwrap" class="instructionsWrap">
+          <div id="instrone" class="instructionsSlide one" style="left:7%;">
+            <div class="card">
+              <h2>1</h2>Pin down the problem's location on the map, by moving the map, and clicking "Pin Location".<br>Click "Reset Location" to move the map back to you.</div>
+          </div>
+          <div id="instrtwo" class="instructionsSlide two" style="left:36.5%;">
+            <div class="card">
+              <h2>2</h2>Once you have your location, you just add a brief description of the problem.<br> If you have the app you can take a picture too!</div>
+          </div>
+          <div id="instrthree" class="instructionsSlide three" style="left:66%;">
+            <div class="card">
+              <h2>3</h2>Push the correct button to call or email the council.</div>
+          </div>
+          <br>
+        </div>
+      </div>
+
+      <!-- Screen for copyright -->
+      <div id="copydiv">
+        <h3>Copyright Information</h3>
+        &copy; 2016-2017 Callum Predavec, www.pleasefix.today
+      </div>
+
+      <!-- Screen for about -->
+      <div id="aboutdiv">
+        <h3>About Us</h3>
+        Callum Predavec is a high school student in Year 11.
+        <br> He created this project to help people fix problems in their local area quickly.
+      </div>
+
+      <!-- Screen for logging in, and creating accounts -->
+      <div id="logindiv">
+        <h2>Log In</h2>
+        <input id="emailinput" placeholder="Email" class="textbox" type="email">
+        <br>
+        <input id="passwordinput" placeholder="Password" class="textbox" type="password">
+        <br><br>
+        <button class="button" onclick="DisplayPopup('create')">Create Account</button>
+        <button class="button" onclick="DisplayPopup('forgot')">Forgot Password</button>
+        <br><br> Please Fix is an app designed to allow users to report problems in their local area.
+      </div>
+
+      <!-- Screen for the map -->
+      <div id="pindiv">
+        <div id="pinmap">
+          <img src='tools.png' style='max-width:200px;' class='loadingimg'>
+          <br>
+          <h3>Loading...</h3>
+        </div>
+      </div>
+
+      <!-- Screen for contacting the council -->
+      <div id="senddiv">
+        <!-- Sub-page for the description -->
+        <div id="description">
+          <h3 id="descriptionheading">Description of the Problem</h3>
+          <textarea id="note" class="textbox" placeholder="Please try and describe the nature of the problem, and its location in the area (e.g. middle of the road)" cols="30" rows="5"></textarea>
+          <br>
+        </div>
+
+        <div id="descriptionmobile">
+          <h3 id="descriptionmobileheading">Description of the Problem</h3>
+          <textarea id="notemobile" class="textbox" placeholder="Please try and describe the nature of the problem, and its location in the area (e.g. middle of the road)" cols="30" rows="5" onchange="document.getElementById('note').value=document.getElementById('notemobile').value;"></textarea>
+          <br>
+          <div id="mobilesection">
+            <h2>Or</h2>
+            <h3 id="callheading">Call the council</h3>
+            <img id="callbutton" src="phone.png" onclick="MakeCall();" style="cursor:pointer;">
+          </div>
+        </div>
+
+        <!-- Sub-page for the camera -->
+        <div id="camera">
+          <br><br>
+          <h3 style="margin-top:0;">Camera Image</h3>
+          <img id='cameraimg'></img><br>
+          <button class="button" onclick="GetPictureFromCamera();" style="margin:auto;"><img class="buttonimg" src="camera.svg">&nbsp;&nbsp;New Picture</button>
+          <button class="button" onclick="GetPictureFromLibrary();" style="margin:auto;"><img class="buttonimg" src="library.svg">&nbsp;&nbsp;Library Picture</button>
+        </div>
+
+        <!-- Sub-page for the location info -->
+        <div id="location">
+          <h3>Location Information</h3>
+          <div id='sendmap'></div>
+          <br>
+          <div id="display"></div>
+        </div>
+
+        <!-- Sub-page for the confirmation -->
+        <div id="confirmation" style="display:none;">
+          <h3>Confirmation</h3>
+          <div id='confirmmap'></div>
+          <div id="confirmdisplay"></div>
+        </div>
+
+        <div id="loadingdiv" style="display:none;"><img id="loadingGif" src="LoadingGif.gif"></div>
+      </div>
+
+      <!-- Toolbar at the bottom of the page -->
+      <div id="toolbar">
+        <div id="tooldisplay">Please Sign In</div>
+        <button id="mapbutton" style="display:none;" class="button tool" onclick="ResetLocation()">Reset Location</button>
+        <button id="signbutton" class="button tool" onclick="SignInWithIP()">Guest Sign In</button>
+        <button id="backbutton" style="display:none;" class="button tool" onclick="ChangePage('map')">Back to the Map</button>
+        <button id="toolbutton" class="button tool emphasis" onclick="SignIn()">Sign In</button>
+        <img id="menuicon" src="menuicon.png" onclick="OpenMenu()">
+      </div>
+
+      <!--  Hidden form for passing data to PHP -->
+      <!--  http: //whenthat.com/problemreporter/email.php -->
+      <form method="post" name="EmailForm" id="EmailForm" action="https://pleasefix.today/mailer/email.php">
+        <input type="hidden" name="noteform" value=""> <input type="hidden" name="emailform" value="">
+        <input type="hidden" name="locationform" value=""> <input type="hidden" name="addressform" value="">
+        <input type="hidden" name="sendform" value="">
+        <input type="hidden" name="cameraform" value="">
+        <input type="hidden" name="nameform" value="">
+        <input type="submit" style="display: none;"></form>
+    </div>
+
+    <!--  Create account popup -->
+    <div id="createpopup" class="popup" style="display:none;">
+      <a class="closebutton popupclose" onclick="DisplayPopup()">&times;</a>
+      <h2>Create Account</h2>
+      <br>
+      <input id="createemail" placeholder="Email" class="textbox" type="email">
+      <br>
+      <input id="createpass1" placeholder="Password" class="textbox" type="password">
+      <br>
+      <input id="createpass2" placeholder="Retype Password" class="textbox" type="password">
+      <br><br>
+      <button class="button" onclick="CreateAccount()">Create Account</button>
+    </div>
+
+    <!--  Forgot password popup -->
+    <div id="forgotpopup" class="popup" style="display:none;">
+      <a class="closebutton popupclose" onclick="DisplayPopup()">&times;</a>
+      <h2>Forgot Password</h2>
+      <br>
+      <input id="forgotemail" placeholder="Email" class="textbox" type="email">
+      <br><br>
+      <button class="button" onclick="ForgotPassword()">Forgot Password</button>
+    </div>
+
+
+
+  </body>
+
+</html>
